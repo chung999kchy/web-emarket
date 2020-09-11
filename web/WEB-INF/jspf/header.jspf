@@ -1,0 +1,96 @@
+<%@taglib prefix= "c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix= "fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix= "fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> ChungShop </title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- CSS File -->
+        <link rel="stylesheet" type="text/css" media="screen" href="css/style.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="menu/css/simple_menu.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/nivo-slider.css">
+        <link rel="stylesheet" type="text/css" href="boxes/css/style6.css">
+        <link rel="stylesheet" type="text/css" media="all" href="js/fancybox/jquery.fancybox.css">
+        <LINK REL="SHORTCUT ICON" HREF="img/logggo.png">
+        <!-- JS Flie -->
+        <!-- ... -->
+    </head>
+
+    <body>
+        <div class="header">
+            <div id="site_title">
+                <img src ="img/logo.png" alt=""><br/>    
+            </div>
+            <ol id ="menu">
+                <li class="active_menu_item"><a href="index.jsp" style="color:#FFF">Home</a></li>
+                <li>
+                    <a href="#">Category</a>
+                    <ol>
+                        <c:forEach var="category" items="${category}">
+                            <li><a href="<c:url value='category?${category.categoryId}'/>">${category.name}</a>
+                                <%--<ol>
+                                    <li><a href="">iMac</a></li>
+                                    <li><a href="#">Mac Pro</a></li>
+                                    <li><a href="#">Macbook Air</a></li>
+                                    <li><a href="#">Macbook Pro</a></li>
+                                </ol> --%>
+                            </li>
+                        </c:forEach>
+                    </ol>
+                </li>
+                
+                <c:choose>
+                    <c:when test="${loginById != null}">
+                        <li>
+                            <a href=" #">${loginById.getName()}</a>
+                        </li>
+                        <li>
+                            <a href="logout"> Logout </a>
+                        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <li>
+                            <a href="login.jsp"> Login </a>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
+            </ol>
+            <img src="img/cart.png" alt="" />
+            <form action="search-box" id="search-box" style="float:right; margin-right: 160px">
+                <input type="text" name="key-search" id="key-search" placeholder="Tìm kiếm">
+                <button type="submit" id="submit" style="display: none"></button>
+            </form>
+            <a href="<c:url value='viewCart'/>">
+                <c:choose>
+                    <c:when test="${cart.numberOfItems == null}">
+                        0
+                    </c:when>
+                    <c:otherwise>
+                        ${cart.numberOfItems}
+                    </c:otherwise>
+                </c:choose>
+                <c:choose>
+                    <c:when test="${cart.numberOfItems == 1}">
+                        item
+                    </c:when>
+                    <c:otherwise>
+                        items
+                    </c:otherwise>
+                </c:choose>
+            </a>
+        </div>
+
+        <c:if test= "${!empty cart && cart.numberOfItems != 0 &&
+                       !fn:contains(pageContext.request.servletPath,'/checkout') &&
+                       requestScope['javax.servlet.forward.servlet_path'] ne '/checkout' &&
+                       !fn:contains(pageContext.request.servletPath,'/viewCart')&&
+                       requestScope['javax.servlet.servlet_path'] ne '/viewCart' &&
+                       validationErrorFlag ne true &&
+                       orderFailureFlag ne true}" >
+           <!--<a href="<c:url value='checkout'/>" >
+              <fmt:message key = "proceedCheckout" />
+          </a> --!>
+        </c:if>
